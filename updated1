@@ -7,7 +7,7 @@ using namespace std;
 
 //Global Variables
 int const ROWS = 3, COLUMNS = 3;
-float DETERMINANT= 0;
+float DETERMINANT = 0;
 
 // Structure
 struct matrix
@@ -33,10 +33,14 @@ int main()
 	matrix matrix_Container;
 	enter(matrix_Container.OM);
 	Transpose_Cal(matrix_Container.OM, matrix_Container.transposeOM);
-	deter_Cal(matrix_Container.OM); 
+	deter_Cal(matrix_Container.OM);
 	Adjoint_Cal(matrix_Container.OM, matrix_Container.AdjointOM);
 
-Print_Struct(&matrix_Container); // For Printing the structure
+	if (DETERMINANT!= 0)         // calculating the inverse only when matrix is non-singular
+	{
+		inverse_Cal(matrix_Container.AdjointOM, matrix_Container.inverseOM);
+	}
+	Print_Struct(&matrix_Container); // For Printing the structure
 }
 
 void enter(float A[ROWS][COLUMNS])
@@ -50,7 +54,8 @@ void enter(float A[ROWS][COLUMNS])
 		}
 
 	}
-	
+	system("CLS");
+
 }
 void Transpose_Cal(float O[][COLUMNS], float trans[][COLUMNS])
 {
@@ -72,7 +77,7 @@ void deter_Cal(float O[][COLUMNS])
 		for (int j = 0; j < 3; j++)
 
 		{
-			temp1 = 1, temp2 = 1,counter = 1;
+			temp1 = 1, temp2 = 1, counter = 1;
 			for (int k = 0; k < ROWS; k++)
 			{
 				for (int l = 0; l < COLUMNS; l++)
@@ -86,7 +91,7 @@ void deter_Cal(float O[][COLUMNS])
 						if (counter == 1 || counter == 4)
 						{
 							temp1 *= O[k][l];
-					     }
+						}
 						else
 						{
 							temp2 *= O[k][l];
@@ -96,73 +101,78 @@ void deter_Cal(float O[][COLUMNS])
 				}
 			}
 			diff = temp1 - temp2;
-			
+
 			if (j != 1)  // when j =0 or j = 2
 			{
 				temp3 = O[i][j] * diff;
 			}
 			else              //when j =-1
 			{
-				temp3 =  -(O[i][j] * diff);
+				temp3 = -(O[i][j] * diff);
 			}
 			DETERMINANT += temp3;
 		}
-	}
-	cout << "THE DETERMINANT IS : " << DETERMINANT << endl;
-	if (DETERMINANT == 0)
-	{
-		cout << "THE ENTERED MATRIX IS SINGULAR.\n";
-	}
-	{
-		cout << "THE ENTERED MATRIX IS NON-SINGULAR.\n";
 	}
 }
 void Adjoint_Cal(float O[][COLUMNS], float Ad[][COLUMNS])
 {
 	float C[ROWS][COLUMNS];
-		float temp1, temp2, diff, temp3;
-		int counter;
-		for (int i = 0; i < ROWS; i++)
+	float temp1, temp2, diff, temp3;
+	int counter;
+	for (int i = 0; i < ROWS; i++)
+	{
+		for (int j = 0; j < COLUMNS; j++)
+
 		{
-			for (int j = 0; j < COLUMNS; j++)
-
+			temp1 = 1, temp2 = 1, counter = 1;
+			for (int k = 0; k < ROWS; k++)
 			{
-				temp1 = 1, temp2 = 1, counter = 1;
-				for (int k = 0; k < ROWS; k++)
+				for (int l = 0; l < COLUMNS; l++)
 				{
-					for (int l = 0; l < COLUMNS; l++)
+					if (k == i || l == j)
 					{
-						if (k == i || l == j)
-						{
-						}
+					}
 
+					else
+					{
+						if (counter == 1 || counter == 4)
+						{
+							temp1 *= O[k][l];
+						}
 						else
 						{
-							if (counter == 1 || counter == 4)
-							{
-								temp1 *= O[k][l];
-							}
-							else
-							{
-								temp2 *= O[k][l];
-							}
-							counter++;
+							temp2 *= O[k][l];
 						}
+						counter++;
 					}
 				}
-				diff = temp1 - temp2;
-				temp3 = pow(-1, i + j)*diff;
-				if (temp3 == -0)
-				{
-					temp3 = 0;
-				}
-			C[i][j] = temp3;
 			}
+			diff = temp1 - temp2;
+			temp3 = pow(-1, i + j) * diff;
+			if (temp3 == -0)
+			{
+				temp3 = 0;
+			}
+			C[i][j] = temp3;
 		}
-		
-		//callling the transpose calculator function to determine the transpose
-		Transpose_Cal(C, Ad);
+	}
+
+	//callling the transpose calculator function to determine the transpose
+	Transpose_Cal(C, Ad);
 }
+void inverse_Cal(float O[][COLUMNS], float inverse[][COLUMNS])
+{
+	for (int i = 0; i < ROWS; i++)
+	{
+		for (int j = 0; j < COLUMNS; j++)
+		{
+			inverse[i][j] = O[i][j] / DETERMINANT;
+		}
+	}
+
+}
+
+
 void Print_Struct(matrix* B)
 {
 	// For Printing the Original Matrix
@@ -200,4 +210,25 @@ void Print_Struct(matrix* B)
 		}
 		cout << "\n\n";
 	}
+
+	// Printing the information about the determinant 
+	cout << "\n\t\tTHE DETERMINANT IS : " << DETERMINANT << endl;
+	if (DETERMINANT == 0)
+	{
+		cout << "\t\tTHE ENTERED MATRIX IS SINGULAR.\n\t\tSO THE INVERSE OF THE MATRIX IS NOT POSSIBLE.\n\n\n";
+	}
+	{
+		cout << "\t\tTHE ENTERED MATRIX IS NON-SINGULAR.\n\n";
+		cout << "\t\tTHE INVERSE OF THE MATRIX IS " << endl;
+		for (int i = 0; i < ROWS; i++)
+		{
+			cout << "\t\t";
+			for (int j = 0; j < COLUMNS; j++)
+			{
+				cout << setw(10) << B->inverseOM[i][j];
+			}
+			cout << "\n\n";
+		}
+	}	
+	
 }
