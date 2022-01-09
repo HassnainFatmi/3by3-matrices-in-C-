@@ -1,0 +1,203 @@
+// Transpose, Adjoint, Determinant and Inverse of a 3 by 3 matrix
+//3by3matrix.cpp
+#include <iostream>
+#include <iomanip>
+#include <cmath>
+using namespace std;
+
+//Global Variables
+int const ROWS = 3, COLUMNS = 3;
+float DETERMINANT= 0;
+
+// Structure
+struct matrix
+{
+	float OM[ROWS][COLUMNS];
+	float AdjointOM[ROWS][COLUMNS];
+	float transposeOM[ROWS][COLUMNS];
+	float inverseOM[ROWS][COLUMNS];
+};
+
+// Functions
+void Adjoint_Cal(float O[][COLUMNS], float Ad[][COLUMNS]);
+void Transpose_Cal(float O[][COLUMNS], float trans[][COLUMNS]);
+void deter_Cal(float O[][COLUMNS]);
+void inverse_Cal(float O[][COLUMNS], float inverse[][COLUMNS]);
+void enter(float A[ROWS][COLUMNS]);
+void Print_Struct(matrix* B);
+
+
+int main()
+{
+	cout << setw(40) << "THIS PROGRAM TAKES A 3BY3 MATRIX FROM THE USER\n" << setw(40) << " AND CALCULATES ITS TRANSPOSE, ADJOINT, DETERMINANT AND INVERSE.\n";
+	matrix matrix_Container;
+	enter(matrix_Container.OM);
+	Transpose_Cal(matrix_Container.OM, matrix_Container.transposeOM);
+	deter_Cal(matrix_Container.OM); 
+	Adjoint_Cal(matrix_Container.OM, matrix_Container.AdjointOM);
+
+Print_Struct(&matrix_Container); // For Printing the structure
+}
+
+void enter(float A[ROWS][COLUMNS])
+{
+	for (int i = 0; i < ROWS; i++)
+	{
+		for (int j = 0; j < COLUMNS; j++)
+		{
+			cout << "\t\t ENTER THE element(" << i + 1 << "," << j + 1 << ") : ";
+			cin >> A[i][j];
+		}
+
+	}
+	
+}
+void Transpose_Cal(float O[][COLUMNS], float trans[][COLUMNS])
+{
+	for (int i = 0; i < ROWS; i++)
+	{
+		for (int j = 0; j < COLUMNS; j++)
+		{
+			trans[i][j] = O[j][i];
+		}
+
+	}
+}
+void deter_Cal(float O[][COLUMNS])
+{
+	float temp1, temp2, diff, temp3;
+	int counter;
+	for (int i = 0; i < 1; i++)
+	{
+		for (int j = 0; j < 3; j++)
+
+		{
+			temp1 = 1, temp2 = 1,counter = 1;
+			for (int k = 0; k < ROWS; k++)
+			{
+				for (int l = 0; l < COLUMNS; l++)
+				{
+					if (k == i || l == j)
+					{
+					}
+
+					else
+					{
+						if (counter == 1 || counter == 4)
+						{
+							temp1 *= O[k][l];
+					     }
+						else
+						{
+							temp2 *= O[k][l];
+						}
+						counter++;
+					}
+				}
+			}
+			diff = temp1 - temp2;
+			
+			if (j != 1)  // when j =0 or j = 2
+			{
+				temp3 = O[i][j] * diff;
+			}
+			else              //when j =-1
+			{
+				temp3 =  -(O[i][j] * diff);
+			}
+			DETERMINANT += temp3;
+		}
+	}
+	cout << "THE DETERMINANT IS : " << DETERMINANT << endl;
+	if (DETERMINANT == 0)
+	{
+		cout << "THE ENTERED MATRIX IS SINGULAR.\n";
+	}
+	{
+		cout << "THE ENTERED MATRIX IS NON-SINGULAR.\n";
+	}
+}
+void Adjoint_Cal(float O[][COLUMNS], float Ad[][COLUMNS])
+{
+	float C[ROWS][COLUMNS];
+		float temp1, temp2, diff, temp3;
+		int counter;
+		for (int i = 0; i < ROWS; i++)
+		{
+			for (int j = 0; j < COLUMNS; j++)
+
+			{
+				temp1 = 1, temp2 = 1, counter = 1;
+				for (int k = 0; k < ROWS; k++)
+				{
+					for (int l = 0; l < COLUMNS; l++)
+					{
+						if (k == i || l == j)
+						{
+						}
+
+						else
+						{
+							if (counter == 1 || counter == 4)
+							{
+								temp1 *= O[k][l];
+							}
+							else
+							{
+								temp2 *= O[k][l];
+							}
+							counter++;
+						}
+					}
+				}
+				diff = temp1 - temp2;
+				temp3 = pow(-1, i + j)*diff;
+				if (temp3 == -0)
+				{
+					temp3 = 0;
+				}
+			C[i][j] = temp3;
+			}
+		}
+		
+		//callling the transpose calculator function to determine the transpose
+		Transpose_Cal(C, Ad);
+}
+void Print_Struct(matrix* B)
+{
+	// For Printing the Original Matrix
+	cout << "\t\tTHE ENTERED MATRIX IS : \n";
+	for (int i = 0; i < ROWS; i++)
+	{
+		cout << "\t\t";
+		for (int j = 0; j < COLUMNS; j++)
+		{
+			cout << setw(10) << B->OM[i][j];
+		}
+		cout << "\n\n";
+	}
+
+	// For Printing the Transpose pf Matrix
+	cout << "\t\tTHE TRANSPOSE OF THE MATRIX IS : \n";
+	for (int i = 0; i < ROWS; i++)
+	{
+		cout << "\t\t";
+		for (int j = 0; j < COLUMNS; j++)
+		{
+			cout << setw(10) << B->transposeOM[i][j];
+		}
+		cout << "\n\n";
+	}
+
+	//For Printing the adjoint of the matrix
+	cout << "\t\tTHE ADJOINT OF THE MATRIX IS " << endl;
+	for (int i = 0; i < ROWS; i++)
+	{
+		cout << "\t\t";
+		for (int j = 0; j < COLUMNS; j++)
+		{
+			cout << setw(10) << B->AdjointOM[i][j];
+		}
+		cout << "\n\n";
+	}
+}
