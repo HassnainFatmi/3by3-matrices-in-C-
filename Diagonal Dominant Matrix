@@ -1,0 +1,56 @@
+// Determination whether a matrix is diagonal dominant or not 
+#include <iostream>
+using namespace std;
+int const ROWS = 10, COLUMNS = 10;
+int main()
+{
+	int r, c;
+	float D_element, sum;
+	bool Dflag = 1;
+	float A[ROWS][COLUMNS];
+	cout << "Enter the no of rows :  ";
+	cin >> r;
+	cout << "Enter the no of columns : ";
+	cin >> c;
+
+	// loop for taking a matrix from the user 
+	for (int i = 0; i < r; i++)
+	{
+		for (int j = 0; j < c; j++)
+		{
+			cout << "Enter the element (" << i + 1 << "," << j + 1 << ") : ";
+			cin >> A[i][j];
+		}
+	}
+
+	// for determining whether the entered matrix is diagonal dominant or not
+	for (int i = 0; i < r; i++)
+	{
+		sum = 0;
+		for (int j = 0; j < c; j++)
+		{
+			if (i == j)      // for the diagonal entry
+			{
+				D_element = A[i][j];
+			}
+			else             // for the non- daigonal entry
+			{
+				sum += A[i][j];
+			}
+		}
+		
+		// When the sum of non_diagonal terms in a row is greater than the diagonal terms
+		if (sum > D_element)
+		{
+			cout << " This matrix is not diagonal dominant.";
+			Dflag = 0;
+			break;
+		}
+	}
+	
+	// when  the matrix is diagonal dominant
+	if (Dflag == 1)
+	{
+		cout << "The matrix is Diagonal Dominant.";
+	}
+}
