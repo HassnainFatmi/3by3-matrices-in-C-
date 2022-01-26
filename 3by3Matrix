@@ -1,143 +1,70 @@
-// Transpose, Adjoint, Determinant and Inverse of a 3 by 3 matrix
-//3by3matrix.cpp
 #include <iostream>
 #include <iomanip>
 using namespace std;
 
-//Global Variables
-int const ROWS = 3, COLUMNS = 3;
-float DETERMINANT= 0;
-
-// Structure
-struct matrix
-{
-	float OM[ROWS][COLUMNS];
-	float AdjointOM[ROWS][COLUMNS];
-	float transposeOM[ROWS][COLUMNS];
-	float inverseOM[ROWS][COLUMNS];
-};
-
-// Functions
-void Adjoint_Cal(float O[][COLUMNS], float Ad[][COLUMNS]);
-void Transpose_Cal(float O[][COLUMNS], float trans[][COLUMNS]);
-void deter_Cal(float O[][COLUMNS]);
-void inverse_Cal(float O[][COLUMNS], float inverse[][COLUMNS]);
-void enter(float A[ROWS][COLUMNS]);
-void Print_Struct(matrix* B);
-
+int const R = 10, C = 10;
+void input(int r, int c,float arr[][C]);
+void c_checker(int r, int c, float arr[][C]);
 
 int main()
 {
-	cout << setw(40) << "THIS PROGRAM TAKES A 3BY3 MATRIX FROM THE USER\n" << setw(40) << " AND CALCULATES ITS TRANSPOSE, ADJOINT, DETERMINANT AND INVERSE.\n";
-	matrix matrix_Container;
-	enter(matrix_Container.OM);
-	Transpose_Cal(matrix_Container.OM, matrix_Container.AdjointOM);
-	deter_Cal(matrix_Container.OM);
+	int rows, columns;
+	float A[R][C];
+	cout << "Enter the no of rows : ";
+	cin >> rows;
+	cout << "Enter the no of Columns : ";
+	cin >> columns;
+	input(rows, columns, A);
+	c_checker(rows, columns, A);
 
 
-	//Print_Struct(&matrix_Container); // For Printing the structure
 }
-void enter(float A[ROWS][COLUMNS])
+void input(int r, int c,float arr[][C])
 {
-	for (int i = 0; i < ROWS; i++)
+	for (int i = 0; i < r; i++)
 	{
-		for (int j = 0; j < COLUMNS; j++)
+		for (int j = 0; j < c; j++)
 		{
-			cout << "\t\t ENTER THE element(" << i + 1 << "," << j + 1 << ") : ";
-			cin >> A[i][j];
-		}
-
-	}
-	
-}
-void Transpose_Cal(float O[][COLUMNS], float trans[][COLUMNS])
-{
-	for (int i = 0; i < ROWS; i++)
-	{
-		for (int j = 0; j < COLUMNS; j++)
-		{
-			trans[i][j] = O[j][i];
-		}
-
-	}
-}
-void deter_Cal(float O[][COLUMNS])
-{
-	float temp1, temp2, diff, temp3;
-	int counter;
-	for (int i = 0; i < 1; i++)
-	{
-		for (int j = 0; j < 3; j++)
-
-		{
-			temp1 = 1, temp2 = 1,counter = 1;
-			for (int k = 0; k < ROWS; k++)
-			{
-				for (int l = 0; l < COLUMNS; l++)
-				{
-					if (k == i || l == j)
-					{
-					}
-
-					else
-					{
-						if (counter == 1 || counter == 4)
-						{
-							temp1 *= O[k][l];
-					     }
-						else
-						{
-							temp2 *= O[k][l];
-						}
-						counter++;
-					}
-				}
-			}
-			diff = temp1 - temp2;
-			
-			if (j != 1)  // when j =0 or j = 2
-			{
-				temp3 = O[i][j] * diff;
-			}
-			else              //when j =-1
-			{
-				temp3 =  -(O[i][j] * diff);
-			}
-			DETERMINANT += temp3;
+			cout << "Enter the element (" << i + 1 << "," << j + 1 << ")";
+			cin >> arr[i][j];
 		}
 	}
-	cout << "THE DETERMINANT IS : " << DETERMINANT << endl;
-	if (DETERMINANT == 0)
-	{
-		cout << "THE ENTERED MATRIX IS SINGULAR.\n";
-	}
-	{
-		cout << "THE ENTERED MATRIX IS NON-SINGULAR.\n";
-	}
-}
-void Print_Struct(matrix* B)
-{
-	// For Printing the Original Matrix
-	cout << "\t\tTHE ENTERED MATRIX IS : \n";
-	for (int i = 0; i < ROWS; i++)
+	for (int i = 0; i < r; i++)
 	{
 		cout << "\t\t";
-		for (int j = 0; j < COLUMNS; j++)
+		for (int j = 0; j < c; j++)
 		{
-			cout << setw(10) << B->OM[i][j];
+			cout << setw(10) << arr[i][j];
 		}
 		cout << "\n\n";
 	}
+}
+void c_checker(int r, int c, float arr[][C])
+{
 
-	// For Printing the Transpose pf Matrix
-	cout << "\t\tTHE TRANSPOSE OF THE MATRIX IS : \n";
-	for (int i = 0; i < ROWS; i++)
+	float sum[C];
+	for (int i = 0; i < C; i++)
 	{
-		cout << "\t\t";
-		for (int j = 0; j < COLUMNS; j++)
-		{
-			cout << setw(10) << B->AdjointOM[i][j];
-		}
-		cout << "\n\n";
+		sum[i] = 0;
 	}
+	for (int i=0;i<c;i++)
+	{
+		for (int j = 0; j < c; j++)
+		{
+			sum[j] += arr[i][j];
+		}
+	}
+	//sorting the sum array in desecnding order
+	int NO_C=1;
+	for (int i = 0; i < c; i++)
+	{
+		float static max = sum[i];
+		cout << "Sum " << i+1 << " is " << sum[i] << endl;
+		if (sum[i]>max)
+		{
+			max = sum[i];
+			NO_C = i+1;
+		}
+	}
+	cout << "The Columns with max sum : " << NO_C << endl;
 }
