@@ -1,70 +1,49 @@
+//sorting an array without pointers
 #include <iostream>
-#include <iomanip>
+#include <cmath>
 using namespace std;
-
-int const R = 10, C = 10;
-void input(int r, int c,float arr[][C]);
-void c_checker(int r, int c, float arr[][C]);
-
+int const MAX = 20;
+void array_sorter(int[], int);
 int main()
 {
-	int rows, columns;
-	float A[R][C];
-	cout << "Enter the no of rows : ";
-	cin >> rows;
-	cout << "Enter the no of Columns : ";
-	cin >> columns;
-	input(rows, columns, A);
-	c_checker(rows, columns, A);
+	int  arr[MAX];
+	int length;
+	cout << "Enter length of array : ";
+	cin >> length;
+	cout << "Enter the array :";
+	for (int i = 0; i < length; i++)
+	{
+		cin >> arr[i];
+	}
 
+	array_sorter(arr, length);
 
+	//Print the sorted array
+	cout << "The sorted array is : " << endl << "\t\t\t";
+	for (int i = 0; i < length; i++)
+	{
+		cout << arr[i] << ", ";
+	}
+	cout << endl;
+	return 0;
 }
-void input(int r, int c,float arr[][C])
+void array_sorter(int ar[], int l)
 {
-	for (int i = 0; i < r; i++)
+	// Now sorting the array
+	for (int i = 0; i < l; i++)
 	{
-		for (int j = 0; j < c; j++)
+		for (int j = i; j < l; j++)
 		{
-			cout << "Enter the element (" << i + 1 << "," << j + 1 << ")";
-			cin >> arr[i][j];
+			if (abs(ar[i]) < abs(ar[j]))       //comparing the absolute values
+			{
+				int temp;
+				temp = ar[i];
+				ar[i] = ar[j];
+				ar[j] = temp;
+			}
 		}
-	}
-	for (int i = 0; i < r; i++)
-	{
-		cout << "\t\t";
-		for (int j = 0; j < c; j++)
-		{
-			cout << setw(10) << arr[i][j];
-		}
-		cout << "\n\n";
 	}
 }
-void c_checker(int r, int c, float arr[][C])
-{
 
-	float sum[C];
-	for (int i = 0; i < C; i++)
-	{
-		sum[i] = 0;
-	}
-	for (int i=0;i<c;i++)
-	{
-		for (int j = 0; j < c; j++)
-		{
-			sum[j] += arr[i][j];
-		}
-	}
-	//sorting the sum array in desecnding order
-	int NO_C=1;
-	for (int i = 0; i < c; i++)
-	{
-		float static max = sum[i];
-		cout << "Sum " << i+1 << " is " << sum[i] << endl;
-		if (sum[i]>max)
-		{
-			max = sum[i];
-			NO_C = i+1;
-		}
-	}
-	cout << "The Columns with max sum : " << NO_C << endl;
-}
+
+//array sorting with pointers
